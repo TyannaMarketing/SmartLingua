@@ -1,0 +1,84 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User specific settings and progress",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "totalStudyTime": { "type": "number", "description": "Total study time in minutes" },
+        "dailyGoal": { "type": "number", "description": "Number of words to learn per day" },
+        "currentStreak": { "type": "number" },
+        "lastActiveDate": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    },
+    "VocabularyItem": {
+      "title": "Vocabulary Item",
+      "description": "A single word or phrase the user is learning",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "word": { "type": "string" },
+        "pronunciation": { "type": "string" },
+        "meaning": { "type": "string" },
+        "partOfSpeech": { "type": "string" },
+        "grammar": { "type": "string" },
+        "level": { "type": "string" },
+        "topic": { "type": "string" },
+        "language": { "type": "string" },
+        "status": { "type": "string", "enum": ["Chưa thuộc", "Cần luyện tập", "Đã thuộc"] },
+        "mistakeCount": { "type": "number" },
+        "label": { "type": "string" },
+        "caption": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "word", "meaning"]
+    },
+    "StudyLog": {
+      "title": "Study Log",
+      "description": "Log of words learned/reviewed per day",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "wordsLearned": { "type": "array", "items": { "type": "string" } },
+        "wordsReviewed": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["date"]
+    },
+    "PaymentRequest": {
+      "title": "Payment Request",
+      "description": "Premium upgrade requests waiting for verification",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "userId": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "plan": { "type": "object" }
+      },
+      "required": ["email", "userId", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Private user profiles"
+    },
+    "/users/{userId}/customWords/{wordId}": {
+      "schema": "VocabularyItem",
+      "description": "User-specific vocabulary"
+    },
+    "/users/{userId}/studyLogs/{logId}": {
+      "schema": "StudyLog",
+      "description": "Daily study history"
+    },
+    "/payment_requests/{requestId}": {
+      "schema": "PaymentRequest",
+      "description": "Global list of pending payment verifications"
+    }
+  }
+}
